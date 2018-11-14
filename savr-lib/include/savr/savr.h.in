@@ -19,18 +19,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef AVRLIB_H
-#define AVRLIB_H
+#ifndef SAVR_H
+#define SAVR_H
 
-#define AVRLIB_VERSION_API_MAJOR 1
-#define AVRLIB_VERSION_API_MINOR 0
-#define AVRLIB_VERSION_API_PATCH 0
+#undef SAVR_API_MAJOR 1
+#undef SAVR_API_MINOR 0
+#undef SAVR_API_PATCH 0
+#undef SAVR_API_VERSION
 
-#define AVRLIB_VERSION_ABI_CURRENT 0
-#define AVRLIB_VERSION_ABI_REVISION 0
-#define AVRLIB_VERSION_ABI_AGE 0
+#undef SAVR_ABI_CUR 0
+#undef SAVR_ABI_REV 0
+#undef SAVR_ABI_AGE 0
+#undef SAVR_ABI_VERSION
 
-#define AVRLIB_EXPORT __attribute__((visibility("default")))
-#define AVRLIB_HIDDEN __attribute__((visibility("hidden")))
+#define SAVR_EXPORT __attribute__((visibility("default")))
+#define SAVR_HIDDEN __attribute__((visibility("hidden")))
 
-#endif  /* AVRLIB_H */
+#endif  /* SAVR_H */

@@ -19,7 +19,8 @@
 # SOFTWARE.
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/savr-lib/include
+	-I$(top_srcdir)/savr-lib/include \
+	-I$(top_builddir)/savr-lib/include
 
 AM_CFLAGS = \
 	-pedantic \

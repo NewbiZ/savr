@@ -22,7 +22,18 @@
 # =============================
 AC_PREREQ(2.59)
 
-AC_INIT([savr], [m4_esyscmd([./version_api.sh])],
+m4_define([AC_SAVR_API_MAJOR], [1])
+m4_define([AC_SAVR_API_MINOR], [0])
+m4_define([AC_SAVR_API_PATCH], [0])
+m4_define([AC_SAVR_API_VERSION], [AC_SAVR_API_MAJOR.AC_SAVR_API_MINOR.AC_SAVR_API_PATCH])
+
+AC_DEFUN([AC_SAVR_ABI_CUR], [0])
+AC_DEFUN([AC_SAVR_ABI_REV], [0])
+AC_DEFUN([AC_SAVR_ABI_AGE], [0])
+AC_DEFUN([AC_SAVR_ABI_VERSION],
+         [AC_SAVR_ABI_CUR:AC_SAVR_ABI_REV:AC_SAVR_ABI_AGE])
+
+AC_INIT([savr], [AC_SAVR_API_VERSION],
     [vallee.aurelien@gmail.com], [savr],
     [https://github.com/NewbiZ/savr])
 
@@ -33,9 +44,19 @@ m4_ifdef([AM_SILENT_RULES], [
     AM_SILENT_RULES([yes])
 ])
 
-# API & ABI
+AC_DEFINE(SAVR_API_MAJOR, AC_SAVR_API_MAJOR, [SAVR API major number])
+AC_DEFINE(SAVR_API_MINOR, AC_SAVR_API_MINOR, [SAVR API minor number])
+AC_DEFINE(SAVR_API_PATCH, AC_SAVR_API_PATCH, [SAVR API patch level])
+AC_DEFINE(SAVR_API_VERSION, "AC_SAVR_API_VERSION", [SAVR API version])
+
+AC_DEFINE(SAVR_ABI_CUR, AC_SAVR_ABI_CUR, [SAVR ABI current number])
+AC_DEFINE(SAVR_ABI_REV, AC_SAVR_ABI_REV, [SAVR ABI revision number])
+AC_DEFINE(SAVR_ABI_AGE, AC_SAVR_ABI_AGE, [SAVR ABI age number])
+AC_DEFINE(SAVR_ABI_VERSION, "AC_SAVR_ABI_VERSION", [SAVR ABI version])
+
+# Libtool
 # =========
-LTVER=m4_esyscmd([./version_abi.sh])
+LTVER=AC_SAVR_ABI_VERSION
 AC_SUBST(LTVER)
 
 # Check build tools
@@ -91,12 +112,13 @@ PKG_INSTALLDIR
 
 # Finish the configuration phase
 # ==============================
-AC_CONFIG_FILES(Makefile \
-                savr-lib/Makefile \
-                savr-lib/savr.pc \
-                savr-bin/Makefile \
-                savr-tests/Makefile)
+AC_CONFIG_FILES([Makefile \
+                 savr-lib/Makefile \
+                 savr-lib/savr.pc \
+                 savr-bin/Makefile \
+                 savr-tests/Makefile])
 AC_CONFIG_FILES([savr-tests/test-compiler.sh], \
                 [chmod +x savr-tests/test-compiler.sh])
+AC_CONFIG_HEADERS([config.h savr-lib/include/savr/savr.h])
 
 AC_OUTPUT

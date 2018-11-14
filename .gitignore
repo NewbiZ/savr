@@ -29,7 +29,8 @@ savr-bin/savr-bin
 savr-tests/test-compiler.sh
 savr-tests/test_dummy
 savr-tests/test_ringbuffer
-
+savr-lib/include/savr/savr.h
+stamp-*
 
 # Vim
 *.swp
