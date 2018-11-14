@@ -1,0 +1,16 @@
+#!/bin/bash
+
+MCU=@MCU@
+FREQ=8000000
+
+TEST_OUTPUT=$(simavr --mcu "${MCU}" --freq "${FREQ}" $@ 2>&1)
+echo "${TEST_OUTPUT}" | grep -q NOK
+
+if [ $? == 0 ]
+then
+    echo "${TEST_OUTPUT}"
+    exit 1
+else
+    echo "${TEST_OUTPUT}"
+    exit 0
+fi
