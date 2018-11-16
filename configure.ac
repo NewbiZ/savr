@@ -66,6 +66,15 @@ AC_LANG([C])
 AC_PROG_LIBTOOL
 AM_PROG_CC_C_O
 
+# Documentation
+# =============
+AC_CHECK_PROG(HAVE_SPHINX, sphinx-build, yes, no)
+if test "x$HAVE_SPHINX" = "xno"
+then
+    AC_MSG_WARN([Sphinx not found - documentation generation disabled])
+fi
+AM_CONDITIONAL([HAVE_SPHINX], [test "x$HAVE_SPHINX" = "xyes"])
+
 # Cross compilation
 # =================
 AC_MSG_CHECKING([if target host is avr])
@@ -113,10 +122,11 @@ PKG_INSTALLDIR
 # Finish the configuration phase
 # ==============================
 AC_CONFIG_FILES([Makefile \
+                 savr-bin/Makefile \
                  savr-lib/Makefile \
                  savr-lib/savr.pc \
-                 savr-bin/Makefile \
-                 savr-tests/Makefile])
+                 savr-tests/Makefile \
+                 savr-docs/Makefile])
 AC_CONFIG_FILES([savr-tests/test-compiler.sh], \
                 [chmod +x savr-tests/test-compiler.sh])
 AC_CONFIG_HEADERS([config.h savr-lib/include/savr/savr.h])

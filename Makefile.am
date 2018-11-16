@@ -24,7 +24,8 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = \
 	savr-lib \
 	savr-bin  \
-	savr-tests
+	savr-tests \
+	savr-docs
 
 EXTRA_DIST = \
 	LICENSE.txt
