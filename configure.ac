@@ -93,23 +93,45 @@ case "$host" in
         ;;
 esac
 
-AC_MSG_CHECKING([if target mcu is compliant])
-case "$MCU" in
-    atmega*)
+AC_ARG_WITH([mcu-freq],
+            AS_HELP_STRING([--with-mcu-freq], [MCU frequency in Hz]))
+AC_MSG_CHECKING([if mcu frequency is provided])
+case "$with_mcu_freq" in
+    *000000)
         AC_MSG_RESULT([yes])
+        AC_SUBST(F_CPU, "$with_mcu_freq")
+        AC_DEFINE_UNQUOTED([F_CPU], [$with_mcu_freq], [MCU frequency in Hz])
         ;;
     *)
         AC_MSG_RESULT([no])
         AC_MSG_WARN()
-        AC_MSG_WARN(savr must be built for a target mcu.)
+        AC_MSG_WARN(savr must be built for a target mcu frequency.)
         AC_MSG_WARN(Try configuring with:)
-        AC_MSG_WARN("$0 --build=$build --host=avr MCU=atmega328")
+        AC_MSG_WARN("$0 --build=$build --host=avr --with-mcu=atmega328 --with-mcu-freq=8000000")
         AC_MSG_WARN()
         AC_MSG_ERROR(aborting configure)
         ;;
 esac
 
-AC_SUBST(MCU)
+AC_ARG_WITH([mcu],
+            AS_HELP_STRING([--with-mcu], [MCU type]))
+AC_MSG_CHECKING([if mcu type is provided])
+case "$with_mcu" in
+    at*)
+        AC_MSG_RESULT([yes])
+        AC_SUBST(MCU, "$with_mcu")
+        AC_DEFINE_UNQUOTED([MCU], ["$with_mcu"], [MCU type])
+        ;;
+    *)
+        AC_MSG_RESULT([no])
+        AC_MSG_WARN()
+        AC_MSG_WARN(savr must be built for a target mcu type.)
+        AC_MSG_WARN(Try configuring with:)
+        AC_MSG_WARN("$0 --build=$build --host=avr --with-mcu=atmega328 --with-mcu-freq=8000000")
+        AC_MSG_WARN()
+        AC_MSG_ERROR(aborting configure)
+        ;;
+esac
 
 # Dependencies
 # ==================

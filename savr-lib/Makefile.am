@@ -57,7 +57,6 @@ pkginclude_HEADERS = \
 	$(top_srcdir)/savr-lib/include/savr/ringbuffer.h \
 	$(top_srcdir)/savr-lib/include/savr/spi.h \
 	$(top_srcdir)/savr-lib/include/savr/uart.h
-#	$(top_srcdir)/savr-lib/include/savr/savr.h.in
 
 pkgconfig_DATA = savr.pc
 
