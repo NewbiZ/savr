@@ -48,12 +48,14 @@ lib_LTLIBRARIES = \
 libsavr_la_SOURCES = \
 	$(top_srcdir)/savr-lib/src/ringbuffer.c \
 	$(top_srcdir)/savr-lib/src/uart.c \
+	$(top_srcdir)/savr-lib/src/spi.c \
 	$(top_srcdir)/savr-lib/src/savr.c
 
 # moduleincludedir = $(pkgincludedir)/module
 
 pkginclude_HEADERS = \
 	$(top_srcdir)/savr-lib/include/savr/ringbuffer.h \
+	$(top_srcdir)/savr-lib/include/savr/spi.h \
 	$(top_srcdir)/savr-lib/include/savr/uart.h
 #	$(top_srcdir)/savr-lib/include/savr/savr.h.in
 
