@@ -4,7 +4,7 @@
 
 void ringbuffer_init(ringbuffer_t* rb, size_t size) {
     rb->size = 0;
-    if ((rb->buffer = (char*)malloc(size))) {
+    if ((rb->buffer = (uint8_t*)malloc(size))) {
         rb->size = size;
     }
     rb->head = rb->tail = rb->buffer;
@@ -12,14 +12,14 @@ void ringbuffer_init(ringbuffer_t* rb, size_t size) {
 
 void ringbuffer_release(ringbuffer_t* rb) {
     rb->size = 0;
-    free((char*)rb->buffer);
+    free((uint8_t*)rb->buffer);
 }
 
 size_t ringbuffer_size(const ringbuffer_t* rb) {
     return rb->size;
 }
 
-size_t ringbuffer_read(ringbuffer_t* rb, char* buffer, size_t size) {
+size_t ringbuffer_read(ringbuffer_t* rb, uint8_t* buffer, size_t size) {
     size_t count = 0;
     while ((rb->head != rb->tail) && (count < size)) {
         *buffer++ = *rb->head++;
@@ -30,7 +30,7 @@ size_t ringbuffer_read(ringbuffer_t* rb, char* buffer, size_t size) {
     return count;
 }
 
-size_t ringbuffer_write(ringbuffer_t* rb, const char* buffer, size_t size) {
+size_t ringbuffer_write(ringbuffer_t* rb, const uint8_t* buffer, size_t size) {
     size_t count = 0;
     while (count++ < size) {
         *rb->tail++ = *buffer++;
