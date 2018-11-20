@@ -34,9 +34,9 @@ void test()
         test_failure("ringbuffer size after init");
 
     input = 0xdeadbeef;
-    ringbuffer_write(&rb, (const char*)&input, sizeof(input));
+    ringbuffer_write(&rb, (const uint8_t*)&input, sizeof(input));
 
-    ringbuffer_read(&rb, (char*)&output, sizeof(output));
+    ringbuffer_read(&rb, (uint8_t*)&output, sizeof(output));
 
     ringbuffer_release(&rb);
 
