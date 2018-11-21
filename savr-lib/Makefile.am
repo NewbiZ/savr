@@ -51,18 +51,19 @@ libsavr_la_SOURCES = \
 	$(top_srcdir)/savr-lib/src/spi.c \
 	$(top_srcdir)/savr-lib/src/savr.c
 
-# moduleincludedir = $(pkgincludedir)/module
+moduleincludedir = $(pkgincludedir)/platform
 
 pkginclude_HEADERS = \
 	$(top_srcdir)/savr-lib/include/savr/ringbuffer.h \
 	$(top_srcdir)/savr-lib/include/savr/spi.h \
-	$(top_srcdir)/savr-lib/include/savr/uart.h
+	$(top_srcdir)/savr-lib/include/savr/uart.h \
+	$(top_srcdir)/savr-lib/include/savr/platform.h
 
 pkgconfig_DATA = savr.pc
 
-#moduleinclude_HEADERS = \
-#	$(top_srcdir)/savr-lib/include/savr/module/file1.h \
-#	$(top_srcdir)/savr-lib/include/savr/module/file2.h
+moduleinclude_HEADERS = \
+	$(top_srcdir)/savr-lib/include/savr/platform/atmega328.h \
+	$(top_srcdir)/savr-lib/include/savr/platform/atmega2560.h
 
 libsavr_la_LDFLAGS = \
 	-no-undefined \

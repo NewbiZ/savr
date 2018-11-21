@@ -19,18 +19,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef SAVR_UART_H
-#define SAVR_UART_H
+#ifndef SAVR_PLATFORM_ATMEGA328_H
+#define SAVR_PLATFORM_ATMEGA328_H
 
-#include <stddef.h>
-#include <avr/io.h>
+/* SPI */
+#define SPI_MOSI_DDR   DDRB
+#define SPI_MOSI_PORT  PORTB
+#define SPI_MOSI_PIN   PINB
+#define SPI_MOSI_BIT   3
 
-#include <savr/platform.h>
+#define SPI_MISO_DDR   DDRB
+#define SPI_MISO_PORT  PORTB
+#define SPI_MISO_PIN   PINB
+#define SPI_MISO_BIT   4
 
-void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo);
-void uart_release(uint8_t uart);
+#define SPI_SCK_DDR   DDRB
+#define SPI_SCK_PORT  PORTB
+#define SPI_SCK_PIN   PINB
+#define SPI_SCK_BIT   5
 
-size_t uart_read(uint8_t uart, uint8_t* buffer, size_t size);
-size_t uart_write(uint8_t uart, const uint8_t* buffer, size_t size);
-
-#endif /* SAVR_UART_H */
+#endif /* SAVR_PLATFORM_ATMEGA328_H */
