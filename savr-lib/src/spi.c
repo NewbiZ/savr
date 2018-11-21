@@ -1,26 +1,33 @@
-#include <savr/ringbuffer.h>
+/*
+Copyright (C) 2016 Aurelien Vallee
 
-#include <avr/interrupt.h>
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+#include <savr/spi.h>
+
 #include <avr/io.h>
+#include <avr/common.h>
+#include <avr/builtins.h>
+#include <avr/boot.h>
+#include <avr/power.h>
 
-static ringbuffer_t __spi_rx;
-static ringbuffer_t __spi_tx;
-
-void spi_init(size_t buffer_size) {
-    /* Allocate RX/TX ring buffers */
-    ringbuffer_init(&__spi_rx, buffer_size);
-    ringbuffer_init(&__spi_tx, buffer_size);
-
+void spi_master_init() {
     /* Enable SPI pins and interrupts */
     SPCR |= _BV(SPIE) | _BV(SPE);
-
-    /* Enable all interrupts */
-    sei();
-}
-
-void spi_config(int data_order, int master, int clock_polarity, int clock_phase) {
-    (void)data_order;
-    (void)master;
-    (void)clock_polarity;
-    (void)clock_phase;
 }
