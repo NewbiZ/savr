@@ -120,7 +120,7 @@ case "$with_mcu" in
     at*)
         AC_MSG_RESULT([yes])
         AC_SUBST(MCU, "$with_mcu")
-        AC_DEFINE_UNQUOTED([MCU], ["$with_mcu"], [MCU type])
+        AC_DEFINE_UNQUOTED([MCU], [$with_mcu], [MCU type])
         ;;
     *)
         AC_MSG_RESULT([no])
