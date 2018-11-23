@@ -71,11 +71,11 @@ libsavr_la_LDFLAGS = \
 BUILT_SOURCES = $(top_srcdir)/savr-lib/src/$(MCU)/$(MCU).pinout.c $(top_srcdir)/savr-lib/include/savr/$(MCU)/$(MCU).pinout.h
 
 $(top_srcdir)/savr-lib/src/$(MCU)/$(MCU).pinout.c: $(top_srcdir)/savr-lib/platform/generate-platform-source.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout
-	$(AM_V_GEN)mkdir -p $(top_srcdir)/savr-lib/src/$(MCU)
+	@mkdir -p $(top_srcdir)/savr-lib/src/$(MCU)
 	$(AM_V_GEN)$(top_srcdir)/savr-lib/platform/generate-platform-source.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout > $@
 
 $(top_srcdir)/savr-lib/include/savr/$(MCU)/$(MCU).pinout.h: $(top_srcdir)/savr-lib/platform/generate-platform-header.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout
-	$(AM_V_GEN)mkdir -p $(top_srcdir)/savr-lib/include/savr/$(MCU)
+	@mkdir -p $(top_srcdir)/savr-lib/include/savr/$(MCU)
 	$(AM_V_GEN)$(top_srcdir)/savr-lib/platform/generate-platform-header.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout > $@
 
 MAINTAINERCLEANFILES = \
