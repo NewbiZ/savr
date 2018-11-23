@@ -20,14 +20,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include <savr/spi.h>
+#include <savr/platform.h>
 
 #include <avr/io.h>
-#include <avr/common.h>
-#include <avr/builtins.h>
-#include <avr/boot.h>
-#include <avr/power.h>
 
 void spi_master_init() {
-    /* Enable SPI pins and interrupts */
-    SPCR |= _BV(SPIE) | _BV(SPE);
+    DDR_PIN_MOSI |= BV_PIN_MOSI | BV_PIN_SCK;
+
+    /* Enable SPI pins, set master mode  */
+    SPCR |= _BV(SPE) | _BV(MSTR) | _BV(SPR0);
+}
+
+void spi_master_release() {
+    /* TODO: SPI master release */
+}
+
+void spi_master_readwrite(uint8_t* buffer, size_t size) {
+    while (buffer < buffer+size) {
+        SPDR = *buffer;
+        while (!(SPSR & (_BV(SPIF))));
+        *buffer++ = SPDR;
+    }
+}
+
+void spi_master_write(const uint8_t* buffer, size_t size) {
+    while (buffer < buffer+size) {
+        SPDR = *buffer++;
+        while (!(SPSR & (_BV(SPIF))));
+    }
+}
+
+void spi_master_read(uint8_t* buffer, size_t size) {
+    while (buffer < buffer+size) {
+        SPDR = 0;
+        while (!(SPSR & (_BV(SPIF))));
+        *buffer++ = SPDR;
+    }
 }

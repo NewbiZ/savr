@@ -23,6 +23,18 @@ SOFTWARE.
 #define SAVR_PLATFORM_H
 
 #include <savr/savr.h>
+#include <avr/io.h>
+
+/* Guess platform */
+#if defined(__AVR_ATmega328__)
+#   define SAVR_MCU atmega328
+#   include <savr/atmega328/atmega328.pinout.h>
+#elif defined(__AVR_ATmega2560__)
+#   define SAVR_MCU atmega2560
+#   include <savr/atmega2560/atmega2560.pinout.h>
+#else
+#   pragma GCC error "Unsupported MCU"
+#endif
 
 /* Try to guess the number of UART available on the MCU.
  * It is highly suggested to use the constants UART0, UART1, UART2 and UART3
@@ -62,6 +74,13 @@ SOFTWARE.
 #define PLATFORM_HEADER_PATH(X) <savr/platform/X.h>
 #define PLATFORM_HEADER(X) PLATFORM_HEADER_PATH(X)
 
-#include PLATFORM_HEADER(MCU)
+/* Pinout helpers */
+#define PIN_DDR(P)  *__portmap[P][0]
+#define PIN_PORT(P) *__portmap[P][0]
+#define PIN_PIN(P)  *__portmap[P][0]
+#define PIN_BIT(P)  BIT_##P
+#define PIN_BV(P)   _BV(PIN_BIT(P))
+
+extern volatile uint8_t* const __portmap[PIN_COUNT][3];
 
 #endif  /* SAVR_PLATFORM_H */

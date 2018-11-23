@@ -28,45 +28,36 @@ SOFTWARE.
 static ringbuffer_t __uart_rx[MAX_UART];
 static ringbuffer_t __uart_tx[MAX_UART];
 static uint8_t __echo[MAX_UART];
-
-void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
-    uint16_t ubrr_value;
-    volatile uint16_t* ubrr_register;
-    volatile uint8_t* ucsra;
-    volatile uint8_t* ucsrb;
-    volatile uint8_t* ucsrc;
-
-    switch (uart) {
+static volatile uint16_t* const __ubrr[MAX_UART] = {
 #if MAX_UART >= 1
-        case UART0:
-            ubrr_register = &UBRR0;
-            ucsra = &UCSR0A;
-            ucsrb = &UCSR0B;
-            ucsrc = &UCSR0C;
+    &UBRR0,
 #endif /* MAXUART >= 1 */
 #if MAX_UART >= 2
-        case UART1:
-            ubrr_register = &UBRR1;
-            ucsra = &UCSR1A;
-            ucsrb = &UCSR1B;
-            ucsrc = &UCSR1C;
+    &UBRR1,
 #endif /* MAXUART >= 2 */
 #if MAX_UART >= 3
-        case UART2:
-            ubrr_register = &UBRR2;
-            ucsra = &UCSR2A;
-            ucsrb = &UCSR2B;
-            ucsrc = &UCSR2C;
+    &UBRR2,
 #endif /* MAXUART >= 3 */
 #if MAX_UART >= 4
-        case UART3:
-            ubrr_register = &UBRR3;
-            ucsra = &UCSR3A;
-            ucsrb = &UCSR3B;
-            ucsrc = &UCSR3C;
+    &UBRR3,
 #endif /* MAXUART >= 4 */
-    }
+};
+static volatile uint8_t* const __ucsr[MAX_UART][3] = {
+#if MAX_UART >= 1
+    { &UCSR0A, &UCSR0B, &UCSR0C },
+#endif /* MAXUART >= 1 */
+#if MAX_UART >= 2
+    { &UCSR1A, &UCSR1B, &UCSR1C },
+#endif /* MAXUART >= 2 */
+#if MAX_UART >= 3
+    { &UCSR2A, &UCSR2B, &UCSR2C },
+#endif /* MAXUART >= 3 */
+#if MAX_UART >= 4
+    { &UCSR3A, &UCSR3B, &UCSR3C },
+#endif /* MAXUART >= 4 */
+};
 
+void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
     /* Allocate RX/TX ring buffers */
     ringbuffer_init(&__uart_rx[uart], buffer_size);
     ringbuffer_init(&__uart_tx[uart], buffer_size);
@@ -74,29 +65,29 @@ void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
     /* Remember echo flag */
     __echo[uart] = echo;
 
-    /* Compute UART speed */
-    ubrr_value = (F_CPU + 8UL * baud) / (16UL * baud) - 1UL;
-    *ubrr_register = ubrr_value;
+    /* Compute UART clock divider */
+    *__ubrr[uart] = (F_CPU + 8UL * baud) / (16UL * baud) - 1UL;
 
     /* Disable 2x mode */
-    *ucsra &= ~_BV(U2X0);
+    /* TODO: handle 2x mode and tolerance */
+    *__ucsr[uart][0] &= ~_BV(U2X0);
 
     /* Enable 8bit data */
-    *ucsrc = _BV(UCSZ01) | _BV(UCSZ00);
+    *__ucsr[uart][2] = _BV(UCSZ01) | _BV(UCSZ00);
 
     /* Enable RX and TX pins for UART */
-    *ucsrb = _BV(RXEN0) | _BV(TXEN0);
+    *__ucsr[uart][1] = _BV(RXEN0) | _BV(TXEN0);
 
     /* Enable UART interrupts */
-    *ucsrb |= _BV(RXCIE0) | _BV(UDRIE0);
+    *__ucsr[uart][1] |= _BV(RXCIE0) | _BV(UDRIE0);
 
-    /* Enable all interrupts */
+    /* Globally enable interrupts */
     sei();
 }
 
 void uart_release(uint8_t uart) {
     (void)uart;
-    /* TODO */
+    /* TODO: release UART resources */
 }
 
 #define ISR_USART_RX(UARTN, VEC, UDR)                           \
@@ -119,9 +110,7 @@ void uart_release(uint8_t uart) {
     }
 
 /* Generate interrupt service routines for all available UARTS.
- * Note: On MCUs with a single UART, the "0" suffix should not appear in
- *       symbols.
- */
+ * On MCUs with a single UART, the "0" suffix should not appear in symbols */
 #if MAX_UART == 1
 ISR_USART_RX(0, USART_RX_vect, UDR0)
 ISR_USART_UDRE(0, USART_UDRE_vect, UDR0)
@@ -142,18 +131,22 @@ ISR_USART_UDRE(3, USART3_UDRE_vect, UDR3)
 #endif /* MAXUART >= 4 */
 
 size_t uart_read(uint8_t uart, uint8_t* buffer, size_t size) {
-    /* Read received bytes from the RX rinf buffer */
     size_t sz;
+    /* Interrupts should be disabled during ringbuffer read/write, since
+     * pointer arithmetic on 16b addresses are not atomic on 8b controllers */
     cli();
+    /* Read bytes from the RX ring buffer that was enqueued by the ISR */
     sz = ringbuffer_read(&__uart_rx[uart], buffer, size);
     sei();
     return sz;
 }
 
 size_t uart_write(uint8_t uart, const uint8_t* buffer, size_t size) {
-    /* Write sent bytes to the TX ring buffer */
     size_t sz;
+    /* Interrupts should be disabled during ringbuffer read/write, since
+     * pointer arithmetic on 16b addresses are not atomic on 8b controllers */
     cli();
+    /* Write bytes to the TX ring buffer that will be dequeued by the ISR */
     sz = ringbuffer_write(&__uart_tx[uart], buffer, size);
     sei();
     return sz;

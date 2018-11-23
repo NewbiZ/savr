@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+TEST_MCU = atmega328
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/savr-lib/include \
 	-I$(top_builddir)/savr-lib/include
@@ -37,7 +39,7 @@ AM_CFLAGS = \
 	-Wl,-O1 \
 	-Wl,--discard-all \
 	-Wl,--no-undefined \
-	-mmcu=$(MCU) \
+	-mmcu=$(TEST_MCU) \
 	-Os \
 	-mcall-prologues \
 	-std=c89
@@ -54,7 +56,7 @@ test_dummy_SOURCES = \
 	$(top_srcdir)/savr-tests/test.h
 
 test_dummy_LDADD = \
-	$(top_builddir)/savr-lib/libsavr.la
+	$(top_builddir)/savr-lib/platform/$(TEST_MCU)/libsavr.la
 
 #
 # test_ringbuffer
@@ -64,7 +66,7 @@ test_ringbuffer_SOURCES = \
 	$(top_srcdir)/savr-tests/test.h
 
 test_ringbuffer_LDADD = \
-	$(top_builddir)/savr-lib/libsavr.la
+	$(top_builddir)/savr-lib/platform/$(TEST_MCU)/libsavr.la
 
 %.hex: %
 	$(AM_V_GEN)avr-objcopy -O ihex $< $@

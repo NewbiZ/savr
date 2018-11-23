@@ -33,7 +33,6 @@ SOFTWARE.
 #undef SAVR_ABI_VERSION
 
 #undef F_CPU
-#undef MCU
 
 #define SAVR_EXPORT __attribute__((visibility("default")))
 #define SAVR_HIDDEN __attribute__((visibility("hidden")))

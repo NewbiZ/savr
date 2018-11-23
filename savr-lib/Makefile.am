@@ -18,59 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/savr-lib/include \
-	-I$(top_builddir)/savr-lib/include
-
-AM_CFLAGS = \
-	-pedantic \
-	-Wformat-security \
-	-W -Wall \
-	-Werror \
-	-Wpointer-arith \
-	-Winit-self \
-	-Wformat=2 \
-	-Wcast-align \
-	-Wlogical-op \
-	-Wshadow \
-	-fvisibility=hidden \
-	-Wl,-O1 \
-	-Wl,--discard-all \
-	-Wl,--no-undefined \
-	-mmcu=$(MCU) \
-	-Os \
-	-mcall-prologues \
-	-std=c89
-
-lib_LTLIBRARIES = \
-	libsavr.la
-
-libsavr_la_SOURCES = \
-	$(top_srcdir)/savr-lib/src/ringbuffer.c \
-	$(top_srcdir)/savr-lib/src/uart.c \
-	$(top_srcdir)/savr-lib/src/spi.c \
-	$(top_srcdir)/savr-lib/src/savr.c
-
-moduleincludedir = $(pkgincludedir)/platform
-
-pkginclude_HEADERS = \
-	$(top_srcdir)/savr-lib/include/savr/ringbuffer.h \
-	$(top_srcdir)/savr-lib/include/savr/spi.h \
-	$(top_srcdir)/savr-lib/include/savr/uart.h \
-	$(top_srcdir)/savr-lib/include/savr/platform.h
-
-pkgconfig_DATA = savr.pc
-
-moduleinclude_HEADERS = \
-	$(top_srcdir)/savr-lib/include/savr/platform/atmega328.h \
-	$(top_srcdir)/savr-lib/include/savr/platform/atmega2560.h
-
-libsavr_la_LDFLAGS = \
-	-no-undefined \
-	-version-info $(LTVER)
-
-#libsavr_la_LIBADD = \
-#	$(FOO_LIBS)
+SUBDIRS = platform
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

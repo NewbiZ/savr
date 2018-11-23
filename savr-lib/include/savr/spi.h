@@ -22,7 +22,13 @@ SOFTWARE.
 #ifndef SAVR_SPI_H
 #define SAVR_SPI_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 void spi_master_init();
 void spi_master_release();
+void spi_master_readwrite(uint8_t* buffer, size_t size);
+void spi_master_write(const uint8_t* buffer, size_t size);
+void spi_master_read(uint8_t* buffer, size_t size);
 
 #endif /* SAVR_SPI_H */

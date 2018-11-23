@@ -107,27 +107,7 @@ case "$with_mcu_freq" in
         AC_MSG_WARN()
         AC_MSG_WARN(savr must be built for a target mcu frequency.)
         AC_MSG_WARN(Try configuring with:)
-        AC_MSG_WARN("$0 --build=$build --host=avr --with-mcu=atmega328 --with-mcu-freq=8000000")
-        AC_MSG_WARN()
-        AC_MSG_ERROR(aborting configure)
-        ;;
-esac
-
-AC_ARG_WITH([mcu],
-            AS_HELP_STRING([--with-mcu], [MCU type]))
-AC_MSG_CHECKING([if mcu type is provided])
-case "$with_mcu" in
-    at*)
-        AC_MSG_RESULT([yes])
-        AC_SUBST(MCU, "$with_mcu")
-        AC_DEFINE_UNQUOTED([MCU], [$with_mcu], [MCU type])
-        ;;
-    *)
-        AC_MSG_RESULT([no])
-        AC_MSG_WARN()
-        AC_MSG_WARN(savr must be built for a target mcu type.)
-        AC_MSG_WARN(Try configuring with:)
-        AC_MSG_WARN("$0 --build=$build --host=avr --with-mcu=atmega328 --with-mcu-freq=8000000")
+        AC_MSG_WARN("$0 --build=$build --host=avr --with-mcu-freq=8000000")
         AC_MSG_WARN()
         AC_MSG_ERROR(aborting configure)
         ;;
@@ -144,8 +124,10 @@ PKG_INSTALLDIR
 # Finish the configuration phase
 # ==============================
 AC_CONFIG_FILES([Makefile \
-                 savr-bin/Makefile \
                  savr-lib/Makefile \
+                 savr-lib/platform/Makefile \
+                 savr-lib/platform/atmega328/Makefile \
+                 savr-lib/platform/atmega2560/Makefile \
                  savr-lib/savr.pc \
                  savr-tests/Makefile \
                  savr-docs/Makefile])

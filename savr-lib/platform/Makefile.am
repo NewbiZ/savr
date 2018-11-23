@@ -18,38 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-MAKEFLAGS = --no-print-directory
-ACLOCAL_AMFLAGS = -I m4
-
-SUBDIRS = \
-	savr-lib \
-	savr-tests \
-	savr-docs
-
-EXTRA_DIST = \
-	LICENSE.txt
+SUBDIRS = atmega328 atmega2560
 
 MAINTAINERCLEANFILES = \
-	Makefile \
-	Makefile.in \
-	aclocal.m4 \
-	autom4te.cache \
-	compile \
-	config.guess \
-	config.log \
-	config.status \
-	config.sub \
-	configure \
-	depcomp \
-	install-sh \
-	libtool \
-	ltmain.sh \
-	missing \
-	test-driver \
-	m4/libtool.m4 \
-	m4/ltoptions.m4 \
-	m4/ltsugar.m4 \
-	m4/ltversion.m4 \
-	m4/lt~obsolete.m4 \
-	config.h \
-	config.h.in
+	Makefile.in
