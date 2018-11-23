@@ -76,8 +76,8 @@ SOFTWARE.
 
 /* Pinout helpers */
 #define PIN_DDR(P)  *__portmap[P][0]
-#define PIN_PORT(P) *__portmap[P][0]
-#define PIN_PIN(P)  *__portmap[P][0]
+#define PIN_PORT(P) *__portmap[P][1]
+#define PIN_PIN(P)  *__portmap[P][2]
 #define PIN_BIT(P)  BIT_##P
 #define PIN_BV(P)   _BV(PIN_BIT(P))
 
