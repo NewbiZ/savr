@@ -127,7 +127,6 @@ AC_CONFIG_FILES([Makefile \
                  savr-lib/Makefile \
                  savr-lib/platform/Makefile \
                  savr-lib/platform/atmega328/Makefile \
-                 savr-lib/platform/atmega2560/Makefile \
                  savr-lib/savr.pc \
                  savr-tests/Makefile \
                  savr-docs/Makefile])

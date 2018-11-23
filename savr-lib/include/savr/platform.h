@@ -75,12 +75,12 @@ SOFTWARE.
 #define PLATFORM_HEADER(X) PLATFORM_HEADER_PATH(X)
 
 /* Pinout helpers */
-#define PIN_DDR(P)  *__portmap[P][0]
-#define PIN_PORT(P) *__portmap[P][1]
-#define PIN_PIN(P)  *__portmap[P][2]
+#define PIN_DDR(P)  *__pinout[P][0]
+#define PIN_PORT(P) *__pinout[P][1]
+#define PIN_PIN(P)  *__pinout[P][2]
 #define PIN_BIT(P)  BIT_##P
 #define PIN_BV(P)   _BV(PIN_BIT(P))
 
-extern volatile uint8_t* const __portmap[PIN_COUNT][3];
+extern volatile uint8_t* const __pinout[PIN_COUNT][3];
 
 #endif  /* SAVR_PLATFORM_H */

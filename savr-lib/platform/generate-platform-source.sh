@@ -4,6 +4,7 @@ PINOUT_FILE="$1"
 
 PIN_COUNT=$(wc -l < "$PINOUT_FILE")
 
+echo "#include <savr/platform.h>"
 echo "volatile uint8_t* const __pinout[PIN_COUNT][3] = {"
 while read -r PIN_LINE
 do
