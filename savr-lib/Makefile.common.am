@@ -49,7 +49,8 @@ libsavr_la_SOURCES = \
 	$(top_srcdir)/savr-lib/src/ringbuffer.c \
 	$(top_srcdir)/savr-lib/src/uart.c \
 	$(top_srcdir)/savr-lib/src/spi.c \
-	$(top_srcdir)/savr-lib/src/savr.c
+	$(top_srcdir)/savr-lib/src/savr.c \
+	$(top_srcdir)/savr-lib/src/io.c
 
 moduleincludedir = $(pkgincludedir)/platform
 

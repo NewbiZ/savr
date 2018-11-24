@@ -22,6 +22,22 @@ SOFTWARE.
 #ifndef SAVR_IO_H
 #define SAVR_IO_H
 
+#include <stdint.h>
+
+#define LOW  0
+#define HIGH 1
+
+#define INPUT  0
+#define OUTPUT 1
+
+#define TRISTATE 0
+#define PULLUP   1
+
+/* Set pin in input/output mode */
 void pin_mode(uint8_t pin, uint8_t direction, uint8_t state);
+
+/* Read or write to a pin */
+void pin_write(uint8_t pin, uint8_t value);
+uint8_t pin_read(uint8_t pin);
 
 #endif /* SAVR_IO_H */

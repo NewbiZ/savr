@@ -79,8 +79,9 @@ SOFTWARE.
 #define PIN_PORT(P) *__pinout[P][1]
 #define PIN_PIN(P)  *__pinout[P][2]
 #define PIN_BIT(P)  BIT_##P
-#define PIN_BV(P)   _BV(PIN_BIT(P))
+#define PIN_BV(P)   __pinbv[P]
 
 extern volatile uint8_t* const __pinout[PIN_COUNT][3];
+extern const uint8_t __pinbv[PIN_COUNT];
 
 #endif  /* SAVR_PLATFORM_H */
