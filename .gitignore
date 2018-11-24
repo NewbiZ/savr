@@ -31,6 +31,12 @@ savr-tests/test_dummy
 savr-tests/test_ringbuffer
 savr-lib/include/savr/savr.h
 stamp-*
+savr-docs/build/
+savr-lib/include/savr/atmega*
+savr-lib/src/atmega*
+
+# Local install
+install/
 
 # Vim
 *.swp
