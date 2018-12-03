@@ -27,8 +27,13 @@ SOFTWARE.
 
 void spi_master_init();
 void spi_master_release();
-void spi_master_readwrite(uint8_t* buffer, size_t size);
-void spi_master_write(const uint8_t* buffer, size_t size);
-void spi_master_read(uint8_t* buffer, size_t size);
+
+uint8_t spi_send(uint8_t send);
+void spi_sendn(uint8_t send, uint8_t* buffer, size_t count);
+
+uint8_t spi_poll_until_mask(uint8_t send, uint8_t mask, uint8_t retries);
+uint8_t spi_poll_until_value(uint8_t send, uint8_t value, uint8_t retries);
+uint8_t spi_poll_while_mask(uint8_t send, uint8_t mask, uint8_t retries);
+uint8_t spi_poll_while_value(uint8_t send, uint8_t value, uint8_t retries);
 
 #endif /* SAVR_SPI_H */

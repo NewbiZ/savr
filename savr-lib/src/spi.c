@@ -28,32 +28,63 @@ void spi_master_init() {
     DDR_PIN_MOSI |= BV_PIN_MOSI | BV_PIN_SCK;
 
     /* Enable SPI pins, set master mode  */
-    SPCR |= _BV(SPE) | _BV(MSTR) | _BV(SPR0);
+    SPCR |= _BV(SPE) | _BV(MSTR) | _BV(SPR1) | _BV(SPR0);
 }
 
 void spi_master_release() {
     /* TODO: SPI master release */
 }
 
-void spi_master_readwrite(uint8_t* buffer, size_t size) {
-    while (buffer < buffer+size) {
-        SPDR = *buffer;
-        while (!(SPSR & (_BV(SPIF))));
-        *buffer++ = SPDR;
+/* Send a single byte */
+uint8_t spi_send(uint8_t send) {
+    SPDR = send;
+    while (!(SPSR & _BV(SPIF)));
+    return SPDR;
+}
+
+/* Send count bytes, and store the received values in buffer if not NULL */
+void spi_sendn(uint8_t send, uint8_t* buffer, size_t count) {
+    size_t i;
+    uint8_t recv;
+    for (i=0; i<count; ++i) {
+        recv = spi_send(send);
+        if (buffer != NULL)
+            buffer[i] = recv;
     }
 }
 
-void spi_master_write(const uint8_t* buffer, size_t size) {
-    while (buffer < buffer+size) {
-        SPDR = *buffer++;
-        while (!(SPSR & (_BV(SPIF))));
-    }
+/* Poll until the received value matches the provided mask */
+uint8_t spi_poll_until_mask(uint8_t send, uint8_t mask, uint8_t retries) {
+    uint8_t recv;
+    do {
+        recv = spi_send(send);
+    } while (retries-- && !(recv & mask));
+    return recv;
 }
 
-void spi_master_read(uint8_t* buffer, size_t size) {
-    while (buffer < buffer+size) {
-        SPDR = 0;
-        while (!(SPSR & (_BV(SPIF))));
-        *buffer++ = SPDR;
-    }
+/* Poll until the received value equals the provided value */
+uint8_t spi_poll_until_value(uint8_t send, uint8_t value, uint8_t retries) {
+    uint8_t recv;
+    do {
+        recv = spi_send(send);
+    } while (retries-- && !(recv == value));
+    return recv;
+}
+
+/* Poll as long as the received value matches the provided mask */
+uint8_t spi_poll_while_mask(uint8_t send, uint8_t mask, uint8_t retries) {
+    uint8_t recv;
+    do {
+        recv = spi_send(send);
+    } while (retries-- && (recv & mask));
+    return recv;
+}
+
+/* Poll as long as the received value equals the provided value */
+uint8_t spi_poll_while_value(uint8_t send, uint8_t value, uint8_t retries) {
+    uint8_t recv;
+    do {
+        recv = spi_send(send);
+    } while (retries-- && (recv == value));
+    return recv;
 }
