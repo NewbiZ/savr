@@ -22,40 +22,13 @@ SOFTWARE.
 #include <savr/savr.h>
 #include <savr/uart.h>
 #include <savr/ringbuffer.h>
+#include <savr/platform.h>
 
 #include <avr/interrupt.h>
 
 static ringbuffer_t __uart_rx[MAX_UART];
 static ringbuffer_t __uart_tx[MAX_UART];
 static uint8_t __echo[MAX_UART];
-static volatile uint16_t* const __ubrr[MAX_UART] = {
-#if MAX_UART >= 1
-    &UBRR0,
-#endif /* MAXUART >= 1 */
-#if MAX_UART >= 2
-    &UBRR1,
-#endif /* MAXUART >= 2 */
-#if MAX_UART >= 3
-    &UBRR2,
-#endif /* MAXUART >= 3 */
-#if MAX_UART >= 4
-    &UBRR3,
-#endif /* MAXUART >= 4 */
-};
-static volatile uint8_t* const __ucsr[MAX_UART][3] = {
-#if MAX_UART >= 1
-    { &UCSR0A, &UCSR0B, &UCSR0C },
-#endif /* MAXUART >= 1 */
-#if MAX_UART >= 2
-    { &UCSR1A, &UCSR1B, &UCSR1C },
-#endif /* MAXUART >= 2 */
-#if MAX_UART >= 3
-    { &UCSR2A, &UCSR2B, &UCSR2C },
-#endif /* MAXUART >= 3 */
-#if MAX_UART >= 4
-    { &UCSR3A, &UCSR3B, &UCSR3C },
-#endif /* MAXUART >= 4 */
-};
 
 void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
     /* Allocate RX/TX ring buffers */
@@ -66,20 +39,20 @@ void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
     __echo[uart] = echo;
 
     /* Compute UART clock divider */
-    *__ubrr[uart] = (F_CPU + 8UL * baud) / (16UL * baud) - 1UL;
+    UBRR(uart) = (F_CPU + 8UL * baud) / (16UL * baud) - 1UL;
 
     /* Disable 2x mode */
     /* TODO: handle 2x mode and tolerance */
-    *__ucsr[uart][0] &= ~_BV(U2X0);
+    UCSRA(uart) &= ~_BV(U2X0);
 
     /* Enable 8bit data */
-    *__ucsr[uart][2] = _BV(UCSZ01) | _BV(UCSZ00);
+    UCSRC(uart) = _BV(UCSZ01) | _BV(UCSZ00);
 
     /* Enable RX and TX pins for UART */
-    *__ucsr[uart][1] = _BV(RXEN0) | _BV(TXEN0);
+    UCSRB(uart) = _BV(RXEN0) | _BV(TXEN0);
 
     /* Enable UART interrupts */
-    *__ucsr[uart][1] |= _BV(RXCIE0) | _BV(UDRIE0);
+    UCSRB(uart) |= _BV(RXCIE0) | _BV(UDRIE0);
 
     /* Globally enable interrupts */
     sei();

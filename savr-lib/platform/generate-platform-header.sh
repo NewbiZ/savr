@@ -14,28 +14,38 @@ PIN_COUNT=$(wc -l < "$PINOUT_FILE")
 
 echo "#define PIN_COUNT $PIN_COUNT"
 
-I=0
-while read -r PIN_LINE
+PIN_I=0
+while read -r LINE
 do
-    read -ra PIN_DESC <<<"$PIN_LINE"
-    DDR="${PIN_DESC[0]}"
-    PORT="${PIN_DESC[1]}"
-    PIN="${PIN_DESC[2]}"
-    BIT="${PIN_DESC[3]}"
-    IFS=, read -ra NAMES <<<"${PIN_DESC[4]}"
+    read -ra LINE_DESC <<<"$LINE"
+    SECTION="${LINE_DESC[0]}"
+    case "$SECTION" in
+        \[pinout\])
+            DDR="${LINE_DESC[1]}"
+            PORT="${LINE_DESC[2]}"
+            PIN="${LINE_DESC[3]}"
+            BIT="${LINE_DESC[4]}"
+            IFS=, read -ra NAMES <<<"${LINE_DESC[5]}"
 
-    for NAME in "${NAMES[@]}"
-    do
-        NAME="PIN_$NAME"
-        echo "/* $NAME */"
-        echo "#define $NAME      $I"
-        echo "#define DDR_$NAME  $DDR"
-        echo "#define PORT_$NAME $PORT"
-        echo "#define PIN_$NAME  $PIN"
-        echo "#define BIT_$NAME  $BIT"
-        echo "#define BV_$NAME   _BV($BIT)"
-        echo
-    done
+            for NAME in "${NAMES[@]}"
+            do
+                NAME="PIN_$NAME"
+                echo "/* $NAME */"
+                echo "#define $NAME      $PIN_I"
+                echo "#define DDR_$NAME  $DDR"
+                echo "#define PORT_$NAME $PORT"
+                echo "#define PIN_$NAME  $PIN"
+                echo "#define BIT_$NAME  $BIT"
+                echo "#define BV_$NAME   _BV($BIT)"
+                echo
+            done
 
-    let I++
-done < "$PINOUT_FILE"
+            let I++
+            ;;
+        \[uart\])
+            MAX_UART="${LINE_DESC[2]}"
+            echo "#define MAX_UART $MAX_UART"
+            echo
+            ;;
+    esac
+done < <(awk '/\[[^]]*\]/ {a=$1; next} NF {gsub("=", " = "); print a" "$0}' "$PINOUT_FILE")

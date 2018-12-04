@@ -81,7 +81,15 @@ SOFTWARE.
 #define PIN_BIT(P)  BIT_##P
 #define PIN_BV(P)   __pinbv[P]
 
+/* UART helpers */
+#define UBRR(U)  *__ubrr[U]
+#define UCSRA(U) *__ucsr[U][0]
+#define UCSRB(U) *__ucsr[U][1]
+#define UCSRC(U) *__ucsr[U][2]
+
 extern volatile uint8_t* const __pinout[PIN_COUNT][3];
 extern const uint8_t __pinbv[PIN_COUNT];
+extern volatile uint16_t* const __ubrr[MAX_UART];
+extern volatile uint8_t* const __ucsr[MAX_UART][3];
 
 #endif  /* SAVR_PLATFORM_H */
