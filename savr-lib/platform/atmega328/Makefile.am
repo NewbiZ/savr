@@ -21,4 +21,4 @@
 MCU = atmega328
 libdir = ${exec_prefix}/lib/savr/atmega328
 include $(top_srcdir)/savr-lib/Makefile.common.am
-libsavr_la_SOURCES += $(top_srcdir)/savr-lib/src/atmega328/atmega328.pinout.c
+libsavr_la_SOURCES += $(top_srcdir)/savr-lib/src/platform/atmega328.pinout.c

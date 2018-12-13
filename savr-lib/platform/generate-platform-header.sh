@@ -46,6 +46,11 @@ do
             MAX_UART="${LINE_DESC[2]}"
             echo "#define MAX_UART $MAX_UART"
             echo
+            for UARTN in $(seq 0 $(( $MAX_UART - 1 )))
+            do
+                echo "#define UART${UARTN} ${UARTN}"
+            done
+            echo
             ;;
     esac
 done < <(awk '/\[[^]]*\]/ {a=$1; next} NF {gsub("=", " = "); print a" "$0}' "$PINOUT_FILE")

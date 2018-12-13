@@ -20,5 +20,7 @@
 
 SUBDIRS = platform
 
+pkgconfig_DATA = $(top_srcdir)/savr-lib/savr.pc
+
 MAINTAINERCLEANFILES = \
 	Makefile.in

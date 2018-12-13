@@ -27,52 +27,12 @@ SOFTWARE.
 
 /* Guess platform */
 #if defined(__AVR_ATmega328__)
-#   define SAVR_MCU atmega328
-#   include <savr/atmega328/atmega328.pinout.h>
+#   include <savr/platform/atmega328.pinout.h>
 #elif defined(__AVR_ATmega2560__)
-#   define SAVR_MCU atmega2560
-#   include <savr/atmega2560/atmega2560.pinout.h>
+#   include <savr/platform/atmega2560.pinout.h>
 #else
 #   pragma GCC error "Unsupported MCU"
 #endif
-
-/* Try to guess the number of UART available on the MCU.
- * It is highly suggested to use the constants UART0, UART1, UART2 and UART3
- * to access the different UARTs, as they will statically assert that the
- * UARTs are supported for this MCU. For instance, prefer:
- *     uart_init(UART1, ...);
- * to
- *     uart_init(1, ...);
- */
-#ifndef MAX_UART
-#   if defined(UBRR3)
-#       define UART0 0
-#       define UART1 1
-#       define UART2 2
-#       define UART3 3
-#       define MAX_UART 4
-#   elif defined(UBRR2)
-#       define UART0 0
-#       define UART1 1
-#       define UART2 2
-#       define MAX_UART 3
-#   elif defined(UBRR1)
-#       define UART0 0
-#       define UART1 1
-#       define MAX_UART 2
-#   elif defined(UBRR0)
-#       define UART0 0
-#       define MAX_UART 1
-#   endif
-#endif /* MAX_UART */
-
-#ifndef MAX_UART
-#    pragma GCC error "MAX_UART not defined and failed to guess it"
-#endif
-
-/* Platform-specific definitions than cannot be otherwise guessed */
-#define PLATFORM_HEADER_PATH(X) <savr/platform/X.h>
-#define PLATFORM_HEADER(X) PLATFORM_HEADER_PATH(X)
 
 /* Pinout helpers */
 #define PIN_DDR(P)  *__pinout[P][0]

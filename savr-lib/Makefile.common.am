@@ -58,30 +58,31 @@ pkginclude_HEADERS = \
 	$(top_srcdir)/savr-lib/include/savr/ringbuffer.h \
 	$(top_srcdir)/savr-lib/include/savr/spi.h \
 	$(top_srcdir)/savr-lib/include/savr/uart.h \
-	$(top_srcdir)/savr-lib/include/savr/platform.h
+	$(top_srcdir)/savr-lib/include/savr/platform.h \
+	$(top_srcdir)/savr-lib/include/savr/savr.h
 
 moduleinclude_HEADERS = \
-   $(top_srcdir)/savr-lib/include/savr/$(MCU)/$(MCU).pinout.h
+   $(top_srcdir)/savr-lib/include/savr/platform/$(MCU).pinout.h
 
-pkgconfig_DATA = $(top_srcdir)/savr-lib/savr.pc
+# pkgconfig_DATA = $(top_srcdir)/savr-lib/savr.pc
 
 libsavr_la_LDFLAGS = \
 	-no-undefined \
 	-version-info $(LTVER)
 
-BUILT_SOURCES = $(top_srcdir)/savr-lib/src/$(MCU)/$(MCU).pinout.c $(top_srcdir)/savr-lib/include/savr/$(MCU)/$(MCU).pinout.h
+BUILT_SOURCES = $(top_srcdir)/savr-lib/src/platform/$(MCU).pinout.c $(top_srcdir)/savr-lib/include/savr/platform/$(MCU).pinout.h
 
-$(top_srcdir)/savr-lib/src/$(MCU)/$(MCU).pinout.c: $(top_srcdir)/savr-lib/platform/generate-platform-source.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout.txt
-	@mkdir -p $(top_srcdir)/savr-lib/src/$(MCU)
+$(top_srcdir)/savr-lib/src/platform/$(MCU).pinout.c: $(top_srcdir)/savr-lib/platform/generate-platform-source.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout.txt
+	@mkdir -p $(top_srcdir)/savr-lib/src/platform
 	$(AM_V_GEN)$(top_srcdir)/savr-lib/platform/generate-platform-source.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout.txt > $@
 
-$(top_srcdir)/savr-lib/include/savr/$(MCU)/$(MCU).pinout.h: $(top_srcdir)/savr-lib/platform/generate-platform-header.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout.txt
-	@mkdir -p $(top_srcdir)/savr-lib/include/savr/$(MCU)
+$(top_srcdir)/savr-lib/include/savr/platform/$(MCU).pinout.h: $(top_srcdir)/savr-lib/platform/generate-platform-header.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout.txt
+	@mkdir -p $(top_srcdir)/savr-lib/include/savr/platform
 	$(AM_V_GEN)$(top_srcdir)/savr-lib/platform/generate-platform-header.sh $(top_srcdir)/savr-lib/platform/$(MCU)/$(MCU).pinout.txt > $@
 
 MAINTAINERCLEANFILES = \
 	Makefile.in
 
 clean-local:
-	-rm -rf $(top_srcdir)/savr-lib/include/savr/$(MCU)
-	-rm -rf $(top_srcdir)/savr-lib/src/$(MCU)
+	-rm -rf $(top_srcdir)/savr-lib/include/savr/platform
+	-rm -rf $(top_srcdir)/savr-lib/src/platform

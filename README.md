@@ -1,6 +1,5 @@
 Simple AVR
-----------
-TODO
+==========
 
 Build
 -----
@@ -8,10 +7,32 @@ Build
 Typical installation instructions:
 
     $ ./autogen.sh
-    $ ./configure --build=x86_64-unknown-linux-gnu --host=avr MCU=atmega328 --prefix=$PWD/install
+    $ ./configure --build=x86_64-unknown-linux-gnu --host=avr --prefix=$PWD/install
     $ make
     $ make check
     $ make install
+
+Usage
+-----
+
+Once installed, the recommended procedure to include and link against `savr` is
+the use of `pkg-config`.
+
+Each platform has its own `savr` library in a separate directory under
+`${prefix}/lib/savr` (e.g. `/usr/lib/savr/atmega328`), while the include
+directory structure is common for all builds (pre-processor is used to include
+the proper files).
+
+To build and link against `savr`, you just have to provide `pkg-config` with
+your target MCU, and it will provide you with all the proper compiler and
+linker flags.
+
+    $ avr-gcc -mmcu=atmega328 program.c -o program.o $(pkg-config --define-variable=mcu=atmega328 --cflags --libs savr)
+    $ avr-objcopy -O ihex program.o program.hex
+
+For this to work, make sure that `${prefix}/lib/pkgconfig` is in your
+`PKG_CONFIG_PATH` environment variable. That should be the case if you
+installed `savr` is a standard location.
 
 Dependencies
 ------------
@@ -25,10 +46,6 @@ tests:
 Authors
 -------
 - Aurelien Vallee <vallee.aurelien@gmail.com>
-
-Disclaimer
-----------
-TODO
 
 Licensed under MIT/X
 --------------------
