@@ -40,3 +40,7 @@ install/
 
 # Vim
 *.swp
+
+# Platform generated files
+savr-lib/include/savr/platform/
+savr-lib/src/platform/
