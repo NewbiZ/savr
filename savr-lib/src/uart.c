@@ -52,7 +52,8 @@ void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
     UCSRB(uart) = _BV(RXEN0) | _BV(TXEN0);
 
     /* Enable UART interrupts */
-    UCSRB(uart) |= _BV(RXCIE0) | _BV(UDRIE0);
+    /* RX will be enabled when there is something to send */
+    UCSRB(uart) |= _BV(RXCIE0);
 
     /* Globally enable interrupts */
     sei();
@@ -80,6 +81,9 @@ void uart_release(uint8_t uart) {
         /* Read sent byte from the TX ring buffer */        \
         if (ringbuffer_read(&__uart_tx[UARTN], &sent, 1))   \
             UDR = sent;                                     \
+        /* Nothing to send, disable interrupts until then */\
+        else                                                \
+            UCSRB(UARTN) &= ~_BV(UDRIE0);                   \
     }
 
 /* Generate interrupt service routines for all available UARTS.
@@ -122,5 +126,6 @@ size_t uart_write(uint8_t uart, const uint8_t* buffer, size_t size) {
     /* Write bytes to the TX ring buffer that will be dequeued by the ISR */
     sz = ringbuffer_write(&__uart_tx[uart], buffer, size);
     sei();
+    UCSRB(uart) |= _BV(UDRIE0);
     return sz;
 }
