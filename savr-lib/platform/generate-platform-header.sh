@@ -40,7 +40,7 @@ do
                 echo
             done
 
-            let I++
+            let PIN_I++
             ;;
         \[uart\])
             MAX_UART="${LINE_DESC[2]}"
