@@ -30,7 +30,6 @@ void pin_mode(uint8_t pin, uint8_t direction, uint8_t state) {
 
 void pin_write(uint8_t pin, uint8_t value) {
     PIN_PORT(pin) ^= (-(uint8_t)value ^ PIN_PORT(pin)) & PIN_BV(pin);
-    PIN_DDR(PIN_C0) ^= (-(uint8_t)LOW ^ PIN_DDR(PIN_C0)) & PIN_BV(PINC0);
 }
 
 uint8_t pin_read(uint8_t pin) {
