@@ -25,7 +25,7 @@ SOFTWARE.
 #include <avr/io.h>
 
 void spi_master_init() {
-    DDR_PIN_MOSI |= BV_PIN_MOSI | BV_PIN_SCK;
+    DDR_PIN_MOSI |= BV_PIN_MOSI | BV_PIN_SCK | BV_PIN_SS;
 
     /* Enable SPI pins, set master mode  */
     SPCR |= _BV(SPE) | _BV(MSTR) | _BV(SPI2X);
