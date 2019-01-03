@@ -28,7 +28,7 @@ void spi_master_init() {
     DDR_PIN_MOSI |= BV_PIN_MOSI | BV_PIN_SCK;
 
     /* Enable SPI pins, set master mode  */
-    SPCR |= _BV(SPE) | _BV(MSTR) | _BV(SPR1) | _BV(SPR0);
+    SPCR |= _BV(SPE) | _BV(MSTR) | _BV(SPI2X);
 }
 
 void spi_master_release() {
