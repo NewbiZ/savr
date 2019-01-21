@@ -37,7 +37,7 @@ AC_INIT([savr], [AC_SAVR_API_VERSION],
     [vallee.aurelien@gmail.com], [savr],
     [https://github.com/NewbiZ/savr])
 
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 
 m4_ifdef([AM_SILENT_RULES], [
