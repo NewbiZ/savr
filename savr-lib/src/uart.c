@@ -130,6 +130,9 @@ size_t uart_read(uint8_t uart, uint8_t* buffer, size_t size) {
         while ((!(UCSRA(uart))) & (1 << RXC(uart)));
         *buffer++ = UDR(uart);
     }
+    if (__echo[uart]) {
+        uart_write(uart, buffer, size);
+    }
 #endif /* SAVR_ENABLE_UART */
     return sz;
 }
