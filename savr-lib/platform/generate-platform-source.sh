@@ -70,3 +70,33 @@ do
     let UART_I++;
 done
 echo "};"
+echo
+
+UART_I=0
+echo "volatile uint8_t* const __udr[MAX_UART] = {"
+while [[ $UART_I < $MAX_UART ]]
+do
+    echo "    &UDR${UART_I},"
+    let UART_I++;
+done
+echo "};"
+echo
+
+UART_I=0
+echo "const uint8_t __rxc[MAX_UART] = {"
+while [[ $UART_I < $MAX_UART ]]
+do
+    echo "    RXC${UART_I},"
+    let UART_I++;
+done
+echo "};"
+echo
+
+UART_I=0
+echo "const uint8_t __udre[MAX_UART] = {"
+while [[ $UART_I < $MAX_UART ]]
+do
+    echo "    UDRE${UART_I},"
+    let UART_I++;
+done
+echo "};"

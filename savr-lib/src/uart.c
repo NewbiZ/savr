@@ -21,20 +21,18 @@ SOFTWARE.
 */
 #include <savr/savr.h>
 #include <savr/uart.h>
-#include <savr/ringbuffer.h>
 #include <savr/platform.h>
 
+#ifdef SAVR_ENABLE_UART
+#include <savr/ringbuffer.h>
 #include <avr/interrupt.h>
 
 static ringbuffer_t __uart_rx[MAX_UART];
 static ringbuffer_t __uart_tx[MAX_UART];
+#endif /* SAVR_ENABLE_UART */
 static uint8_t __echo[MAX_UART];
 
 void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
-    /* Allocate RX/TX ring buffers */
-    ringbuffer_init(&__uart_rx[uart], buffer_size);
-    ringbuffer_init(&__uart_tx[uart], buffer_size);
-
     /* Remember echo flag */
     __echo[uart] = echo;
 
@@ -51,12 +49,20 @@ void uart_init(uint8_t uart, uint16_t baud, size_t buffer_size, uint8_t echo) {
     /* Enable RX and TX pins for UART */
     UCSRB(uart) = _BV(RXEN0) | _BV(TXEN0);
 
+#ifdef SAVR_ENABLE_UART
+    /* Allocate RX/TX ring buffers */
+    ringbuffer_init(&__uart_rx[uart], buffer_size);
+    ringbuffer_init(&__uart_tx[uart], buffer_size);
+
     /* Enable UART interrupts */
     /* RX will be enabled when there is something to send */
     UCSRB(uart) |= _BV(RXCIE0);
 
     /* Globally enable interrupts */
     sei();
+#else /* SAVR_ENABLE_UART */
+    (void)buffer_size;
+#endif /* SAVR_ENABLE_UART */
 }
 
 void uart_release(uint8_t uart) {
@@ -88,6 +94,7 @@ void uart_release(uint8_t uart) {
 
 /* Generate interrupt service routines for all available UARTS.
  * On MCUs with a single UART, the "0" suffix should not appear in symbols */
+#ifdef SAVR_ENABLE_UART
 #if MAX_UART == 1
 ISR_USART_RX(0, USART_RX_vect, UDR0)
 ISR_USART_UDRE(0, USART_UDRE_vect, UDR0)
@@ -106,20 +113,30 @@ ISR_USART_UDRE(2, USART2_UDRE_vect, UDR2)
 ISR_USART_RX(3, USART3_RX_vect, UDR3)
 ISR_USART_UDRE(3, USART3_UDRE_vect, UDR3)
 #endif /* MAXUART >= 4 */
+#endif /* SAVR_ENABLE_UART */
 
 size_t uart_read(uint8_t uart, uint8_t* buffer, size_t size) {
     size_t sz;
+#ifdef SAVR_ENABLE_UART
     /* Interrupts should be disabled during ringbuffer read/write, since
      * pointer arithmetic on 16b addresses are not atomic on 8b controllers */
     cli();
     /* Read bytes from the RX ring buffer that was enqueued by the ISR */
     sz = ringbuffer_read(&__uart_rx[uart], buffer, size);
     sei();
+#else /* SAVR_ENABLE_UART */
+    sz = size;
+    while (size--) {
+        while ((!(UCSRA(uart))) & (1 << RXC(uart)));
+        *buffer++ = UDR(uart);
+    }
+#endif /* SAVR_ENABLE_UART */
     return sz;
 }
 
 size_t uart_write(uint8_t uart, const uint8_t* buffer, size_t size) {
     size_t sz;
+#ifdef SAVR_ENABLE_UART
     /* Interrupts should be disabled during ringbuffer read/write, since
      * pointer arithmetic on 16b addresses are not atomic on 8b controllers */
     cli();
@@ -127,5 +144,12 @@ size_t uart_write(uint8_t uart, const uint8_t* buffer, size_t size) {
     sz = ringbuffer_write(&__uart_tx[uart], buffer, size);
     sei();
     UCSRB(uart) |= _BV(UDRIE0);
+#else /* SAVR_ENABLE_UART */
+    sz = size;
+    while (size--) {
+        while (!(UCSRA(uart) & (1 << UDRE(uart))));
+        UDR(uart) = *buffer++;
+    }
+#endif /* SAVR_ENABLE_UART */
     return sz;
 }

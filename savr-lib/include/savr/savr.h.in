@@ -34,6 +34,8 @@ SOFTWARE.
 
 #undef F_CPU
 
+#undef SAVR_ENABLE_UART
+
 #define SAVR_EXPORT __attribute__((visibility("default")))
 #define SAVR_HIDDEN __attribute__((visibility("hidden")))
 

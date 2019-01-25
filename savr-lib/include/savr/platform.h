@@ -46,10 +46,16 @@ SOFTWARE.
 #define UCSRA(U) *__ucsr[U][0]
 #define UCSRB(U) *__ucsr[U][1]
 #define UCSRC(U) *__ucsr[U][2]
+#define UDR(U)   *__udr[U]
+#define UDRE(U)  __udre[U]
+#define RXC(U)   __rxc[U]
 
 extern volatile uint8_t* const __pinout[PIN_COUNT][3];
 extern const uint8_t __pinbv[PIN_COUNT];
 extern volatile uint16_t* const __ubrr[MAX_UART];
 extern volatile uint8_t* const __ucsr[MAX_UART][3];
+extern volatile uint8_t* const __udr[MAX_UART];
+extern const uint8_t __udre[MAX_UART];
+extern const uint8_t __rxc[MAX_UART];
 
 #endif  /* SAVR_PLATFORM_H */

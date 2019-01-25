@@ -25,7 +25,8 @@ AC_PREREQ(2.59)
 m4_define([AC_SAVR_API_MAJOR], [1])
 m4_define([AC_SAVR_API_MINOR], [0])
 m4_define([AC_SAVR_API_PATCH], [0])
-m4_define([AC_SAVR_API_VERSION], [AC_SAVR_API_MAJOR.AC_SAVR_API_MINOR.AC_SAVR_API_PATCH])
+m4_define([AC_SAVR_API_VERSION],
+          [AC_SAVR_API_MAJOR.AC_SAVR_API_MINOR.AC_SAVR_API_PATCH])
 
 AC_DEFUN([AC_SAVR_ABI_CUR], [0])
 AC_DEFUN([AC_SAVR_ABI_REV], [0])
@@ -112,6 +113,13 @@ case "$with_mcu_freq" in
         AC_MSG_ERROR(aborting configure)
         ;;
 esac
+
+AC_ARG_ENABLE([uart],
+              AS_HELP_STRING([--disable-uart],
+                             [Disable UART management (UART interrupts will not be installed)]))
+AS_IF([test "x$enable_uart" != "xno"], [
+    AC_DEFINE([SAVR_ENABLE_UART], [1], [UART support])
+])
 
 # Dependencies
 # ==================
